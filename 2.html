@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+    html,
+    body,
+    div,
+    ul,
+    li {
+        margin: 0;
+        padding: 0;
+    }
+    
+    html,
+    body {
+        height: 100%;
+    }
+    
+    .title {
+        background: #aaa;
+        width: 220px;
+        height: 100%;
+        float: left;
+    }
+    
+    .content {
+        background: #eee;
+        margin-left: 220px;
+        height: 100%;
+        /*overflow: scroll;
+*/
+    }
+    
+    li {
+        margin-top: 10px;
+        font-size: 16px;
+        line-height: 2;
+        text-align: center;
+        cursor: pointer;
+    }
+    </style>
+</head>
+
+<body>
+    <div class="title">
+        <ul id="title"></ul>
+    </div>
+    <div id="content"></div>
+    <script>
+    //要挂载到http服务器上
+    var data = {
+        '五环': '1111',
+        '滑板鞋': '2222',
+        '屯里人': '3333'
+    }
+    var geming = document.querySelector('#title');
+
+    for (var title in data) {
+        var li = document.createElement('li');
+        li.innerHTML = title;
+        li.setAttribute('data-title', title);
+        geming.appendChild(li);
+    }
+    var lis = document.querySelectorAll('#title>li');
+    var content = document.getElementById('content');
+    for (var i = 0; i < lis.length; i++) {
+        lis[i].addEventListener('click', function(e) {
+            var title = this.dataset['title'];
+            console.log(title);
+            console.log(data[title])
+            content.innerHTML = data[title];
+            if (window.history && history.pushState) {
+                history.pushState(title, '这个参数没有浏览器支持', '?t=' + title);
+                // history.popState(e.state);
+
+            } else {
+                console.log('不支持');
+            }
+            //当我们在伪造的访问历史记录中前进或后退时，会执行一个popstate事件
+            window.addEventListener('popstate', function(e) {
+                content.innerHTML = data[e.state]
+                console.log(e)
+            })
+        })
+    }
+    </script>
+</body>
+
+</html>
